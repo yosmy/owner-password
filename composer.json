@@ -1,5 +1,5 @@
 {
-    "name": "yosmy/password-user",
+    "name": "yosmy/password",
     "license": "MIT",
     "authors": [
         {
@@ -10,12 +10,13 @@
     "require": {
         "php": ">=7.2",
         "yosmy/mongo": "@dev",
+        "yosmy/uniqueness": "@dev",
         "symsonte/security-asserter": "@dev",
         "symsonte/security-encoder": "@dev"
     },
     "autoload": {
         "psr-4": {
-            "Yosmy\\Password\\": [
+            "Yosmy\\": [
                 "src"
             ]
         }

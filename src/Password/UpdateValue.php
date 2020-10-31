@@ -1,18 +1,17 @@
 <?php
 
-namespace Yosmy\Password\User;
+namespace Yosmy\Password;
 
 use Symsonte\Security;
-use Yosmy\Password\ManageUserCollection;
-use Yosmy\Password\User;
+use Yosmy;
 
 /**
  * @di\service()
  */
-class UpdatePassword
+class UpdateValue
 {
     /**
-     * @var ManageUserCollection
+     * @var Yosmy\ManagePasswordCollection
      */
     private $manageCollection;
 
@@ -22,11 +21,11 @@ class UpdatePassword
     private $encoder;
 
     /**
-     * @param ManageUserCollection $manageCollection
-     * @param Security\HashEncoder $encoder
+     * @param Yosmy\ManagePasswordCollection $manageCollection
+     * @param Security\HashEncoder           $encoder
      */
     public function __construct(
-        ManageUserCollection $manageCollection,
+        Yosmy\ManagePasswordCollection $manageCollection,
         Security\HashEncoder $encoder
     ) {
         $this->manageCollection = $manageCollection;
@@ -34,27 +33,30 @@ class UpdatePassword
     }
 
     /**
-     * @param string $id
+     * @param string $user
      * @param string $plain
      */
     public function update(
-        string $id,
+        string $user,
         string $plain
     ) {
-        /** @var User $user */
-        $user = $this->manageCollection->findOne([
-            '_id' => $id,
+        /** @var Yosmy\Password $password */
+        $password = $this->manageCollection->findOne([
+            '_id' => $user,
         ]);
 
-        $password = $this->encoder->encode($plain, $user->getSalt());
+        $value = $this->encoder->encode(
+            $plain,
+            $password->getSalt()
+        );
 
         $this->manageCollection->updateOne(
             [
-                '_id' => $id
+                '_id' => $user
             ],
             [
                 '$set' => [
-                    'password' => $password
+                    'value' => $value
                 ]
             ]
         );

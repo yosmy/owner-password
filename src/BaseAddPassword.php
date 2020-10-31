@@ -1,16 +1,16 @@
 <?php
 
-namespace Yosmy\Password;
+namespace Yosmy;
 
 use Symsonte\Security;
 
 /**
  * @di\service()
  */
-class AddUser
+class BaseAddPassword implements AddPassword
 {
     /**
-     * @var ManageUserCollection
+     * @var ManagePasswordCollection
      */
     private $manageCollection;
 
@@ -20,11 +20,11 @@ class AddUser
     private $encoder;
 
     /**
-     * @param ManageUserCollection $manageCollection
-     * @param Security\HashEncoder $encoder
+     * @param ManagePasswordCollection $manageCollection
+     * @param Security\HashEncoder     $encoder
      */
     public function __construct(
-        ManageUserCollection $manageCollection,
+        ManagePasswordCollection $manageCollection,
         Security\HashEncoder $encoder
     ) {
         $this->manageCollection = $manageCollection;
@@ -32,21 +32,24 @@ class AddUser
     }
 
     /**
-     * @param string $id
-     * @param string $password
+     * @param string $user
+     * @param string $value
      */
     public function add(
-        string $id,
-        string $password
+        string $user,
+        string $value
     ) {
         $salt = uniqid('salt-', true);
 
-        $password = $this->encoder->encode($password, $salt);
+        $value = $this->encoder->encode(
+            $value,
+            $salt
+        );
 
         $this->manageCollection->insertOne([
-            '_id' => $id,
+            '_id' => $user,
             'salt' => $salt,
-            'password' => $password
+            'value' => $value
         ]);
     }
 }

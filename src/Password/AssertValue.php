@@ -1,18 +1,17 @@
 <?php
 
-namespace Yosmy\Password\User;
+namespace Yosmy\Password;
 
 use Symsonte\Security;
-use Yosmy\Password\ManageUserCollection;
-use Yosmy\Password\User;
+use Yosmy;
 
 /**
  * @di\service()
  */
-class AssertPassword
+class AssertValue
 {
     /**
-     * @var ManageUserCollection
+     * @var Yosmy\ManagePasswordCollection
      */
     private $manageCollection;
 
@@ -27,12 +26,12 @@ class AssertPassword
     private $eqAsserter;
 
     /**
-     * @param ManageUserCollection            $manageCollection
+     * @param Yosmy\ManagePasswordCollection  $manageCollection
      * @param Security\HashEncoder            $encoder
      * @param Security\ConstantTimeEqAsserter $eqAsserter
      */
     public function __construct(
-        ManageUserCollection $manageCollection,
+        Yosmy\ManagePasswordCollection $manageCollection,
         Security\HashEncoder $encoder,
         Security\ConstantTimeEqAsserter $eqAsserter
     ) {
@@ -42,23 +41,23 @@ class AssertPassword
     }
 
     /**
-     * @param string $id
+     * @param string $user
      * @param string $plain
      *
      * @return bool
      */
     public function assert(
-        string $id,
+        string $user,
         string $plain
-    ) {
-        /** @var User $user */
-        $user = $this->manageCollection->findOne([
-            '_id' => $id
+    ): bool {
+        /** @var Yosmy\Password $password */
+        $password = $this->manageCollection->findOne([
+            '_id' => $user
         ]);
 
         return $this->eqAsserter->assert(
-            $this->encoder->encode($plain, $user->getSalt()),
-            $user->getPassword()
+            $this->encoder->encode($plain, $password->getSalt()),
+            $password->getValue()
         );
     }
 }

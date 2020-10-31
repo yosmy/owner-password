@@ -1,35 +1,27 @@
 <?php
 
-namespace Yosmy\Password;
+namespace Yosmy;
 
 use Yosmy\Mongo;
 
-/**
- * @di\service({
- *     private: true
- * })
- */
-class BaseManageUserCollection extends Mongo\BaseManageCollection
+class BaseManagePasswordCollection extends Mongo\BaseManageCollection implements ManagePasswordCollection
 {
     /**
-     * @di\arguments({
-     *     uri: "%mongo_uri%",
-     *     db:  "%mongo_db%"
-     * })
-     *
      * @param string $uri
      * @param string $db
+     * @param string $collection
      * @param string $root
      */
     public function __construct(
         string $uri,
         string $db,
+        string $collection,
         string $root
     ) {
         parent::__construct(
             $uri,
             $db,
-            'yosmy_password_users',
+            $collection,
             [
                 'typeMap' => array(
                     'root' => $root,
