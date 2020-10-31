@@ -9,8 +9,6 @@
     ],
     "require": {
         "php": ">=7.2",
-        "ext-mongodb": "*",
-        "ext-json": "*",
         "yosmy/mongo": "@dev",
         "symsonte/security-asserter": "@dev",
         "symsonte/security-encoder": "@dev"
